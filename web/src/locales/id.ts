@@ -87,7 +87,7 @@ export default {
       namePlaceholder: 'Silakan masukkan nama!',
       doc: 'Dokumen',
       datasetDescription:
-        '😉 Pertanyaan dan jawaban hanya dapat dijawab setelah parsing berhasil.',
+        '😉 Pertanyaan dan jawaban hanya dapat dijawab setelah parsing berhasil. Perhatikan bahwa perubahan yang dilakukan di sini tidak akan disimpan secara otomatis. Jika Anda menyesuaikan pengaturan default di sini, seperti bobot kesamaan kata kunci, pastikan Anda memperbarui pengaturan terkait secara sinkron di pengaturan asisten obrolan atau pengaturan operator pemanggilan kembali.',
       addFile: 'Tambah file',
       searchFiles: 'Cari file Anda',
       localFiles: 'File lokal',
@@ -104,7 +104,7 @@ export default {
       processDuration: 'Durasi Proses',
       progressMsg: 'Pesan Kemajuan',
       testingDescription:
-        'Final step! After success, leave the rest to Kecilin-Team/assistxsuite/ AI.',
+        'Lakukan tes pengambilan untuk memeriksa apakah RAGFlow dapat memulihkan konten yang diinginkan untuk LLM. ',
       similarityThreshold: 'Similarity threshold',
       similarityThresholdTip:
         'Kami menggunakan skor kesamaan hibrida untuk mengevaluasi jarak antara dua baris teks. Ini adalah kesamaan kata kunci berbobot dan kesamaan kosinus vektor. Jika kesamaan antara kueri dan potongan kurang dari ambang ini, potongan akan disaring.',
@@ -225,10 +225,10 @@ export default {
           <i>Semua file PPT yang Anda unggah akan dipotong menggunakan metode ini secara otomatis, pengaturan untuk setiap file PPT tidak diperlukan.</i></p>`,
       qa: `
           <p>
-          Metode potongan ini mendukung format file <b>EXCEL</b> dan <b>CSV/TXT</b>.
+          Metode potongan ini mendukung format file <b>XLSX</b> dan <b>CSV/TXT</b>.
         </p>
         <li>
-          Jika file dalam format <b>Excel</b>, harus terdiri dari dua kolom
+          Jika file dalam format <b>XLSX</b>, harus terdiri dari dua kolom
           tanpa header: satu untuk pertanyaan dan yang lainnya untuk jawaban, dengan
           kolom pertanyaan mendahului kolom jawaban. Lembar kerja ganda dapat diterima selama kolom terstruktur dengan benar.
         </li>
@@ -251,7 +251,7 @@ export default {
           maka Anda dapat mencantumkan semua kandidat yang memenuhi kualifikasi hanya dengan berbicara dengan <i>'assistxsuite'</i>.
           </p>
           `,
-      table: `<p>Format file yang didukung adalah <b>EXCEL</b> dan <b>CSV/TXT</b>.</p><p>
+      table: `<p>Format file yang didukung adalah <b>XLSX</b> dan <b>CSV/TXT</b>.</p><p>
           Berikut beberapa tips:
           <ul>
         <li>Untuk file csv atau txt, pembatas antara kolom adalah <em><b>TAB</b></em>.</li>
@@ -648,6 +648,7 @@ export default {
       newFolder: 'Folder Baru',
       file: 'File',
       uploadFile: 'Unggah File',
+      parseOnCreation: 'Memparsing saat dibuat',
       directory: 'Direktori',
       uploadTitle: 'Klik atau seret file ke area ini untuk mengunggah',
       uploadDescription:

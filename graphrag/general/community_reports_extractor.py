@@ -17,9 +17,10 @@ from graphrag.general.community_report_prompt import COMMUNITY_REPORT_PROMPT
 from graphrag.general.extractor import Extractor
 from graphrag.general.leiden import add_community_info2graph
 from rag.llm.chat_model import Base as CompletionLLM
-from graphrag.utils import perform_variable_replacements, dict_has_keys_with_types
+from graphrag.utils import perform_variable_replacements, dict_has_keys_with_types, chat_limiter
 from rag.utils import num_tokens_from_string
 from timeit import default_timer as timer
+import trio
 
 
 @dataclass
@@ -52,7 +53,7 @@ class CommunityReportsExtractor(Extractor):
         self._extraction_prompt = COMMUNITY_REPORT_PROMPT
         self._max_report_length = max_report_length or 1500
 
-    def __call__(self, graph: nx.Graph, callback: Callable | None = None):
+    async def __call__(self, graph: nx.Graph, callback: Callable | None = None):
         for node_degree in graph.degree:
             graph.nodes[str(node_degree[0])]["rank"] = int(node_degree[1])
 
@@ -68,7 +69,7 @@ class CommunityReportsExtractor(Extractor):
                 weight = ents["weight"]
                 ents = ents["nodes"]
                 ent_df = pd.DataFrame(self._get_entity_(ents)).dropna()#[{"entity": n, **graph.nodes[n]} for n in ents])
-                if ent_df.empty:
+                if ent_df.empty or "entity_name" not in ent_df.columns:
                     continue
                 ent_df["entity"] = ent_df["entity_name"]
                 del ent_df["entity_name"]
@@ -86,28 +87,30 @@ class CommunityReportsExtractor(Extractor):
                 }
                 text = perform_variable_replacements(self._extraction_prompt, variables=prompt_variables)
                 gen_conf = {"temperature": 0.3}
+                async with chat_limiter:
+                    response = await trio.to_thread.run_sync(lambda: self._chat(text, [{"role": "user", "content": "Output:"}], gen_conf))
+                token_count += num_tokens_from_string(text + response)
+                response = re.sub(r"^[^\{]*", "", response)
+                response = re.sub(r"[^\}]*$", "", response)
+                response = re.sub(r"\{\{", "{", response)
+                response = re.sub(r"\}\}", "}", response)
+                logging.debug(response)
                 try:
-                    response = self._chat(text, [{"role": "user", "content": "Output:"}], gen_conf)
-                    token_count += num_tokens_from_string(text + response)
-                    response = re.sub(r"^[^\{]*", "", response)
-                    response = re.sub(r"[^\}]*$", "", response)
-                    response = re.sub(r"\{\{", "{", response)
-                    response = re.sub(r"\}\}", "}", response)
-                    logging.debug(response)
                     response = json.loads(response)
-                    if not dict_has_keys_with_types(response, [
-                                ("title", str),
-                                ("summary", str),
-                                ("findings", list),
-                                ("rating", float),
-                                ("rating_explanation", str),
-                            ]):
-                        continue
-                    response["weight"] = weight
-                    response["entities"] = ents
-                except Exception:
-                    logging.exception("CommunityReportsExtractor got exception")
+                except json.JSONDecodeError as e:
+                    logging.error(f"Failed to parse JSON response: {e}")
+                    logging.error(f"Response content: {response}")
                     continue
+                if not dict_has_keys_with_types(response, [
+                            ("title", str),
+                            ("summary", str),
+                            ("findings", list),
+                            ("rating", float),
+                            ("rating_explanation", str),
+                        ]):
+                    continue
+                response["weight"] = weight
+                response["entities"] = ents
 
                 add_community_info2graph(graph, ents, response["title"])
                 res_str.append(self._get_text_output(response))
