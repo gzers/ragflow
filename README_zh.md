@@ -36,7 +36,7 @@
   <a href="https://ragflow.io/docs/dev/">Document</a> |
   <a href="https://github.com/infiniflow/ragflow/issues/4214">Roadmap</a> |
   <a href="https://twitter.com/infiniflowai">Twitter</a> |
-  <a href="https://discord.gg/zd4qPW6t">Discord</a> |
+  <a href="https://discord.gg/NjYzJD3GM3">Discord</a> |
   <a href="https://demo.ragflow.io">Demo</a>
 </h4>
 
@@ -55,12 +55,10 @@
 
 ## 🔥 近期更新
 
+- 2025-03-19 PDF和DOCX中的图支持用多模态大模型去解析得到描述.
 - 2025-02-28 结合互联网搜索（Tavily），对于任意大模型实现类似 Deep Research 的推理功能.
-- 2025-02-05 更新硅基流动的模型列表，增加了对 Deepseek-R1/DeepSeek-V3 的支持。
 - 2025-01-26 优化知识图谱的提取和应用，提供了多种配置选择。
 - 2024-12-18 升级了 DeepDoc 的文档布局分析模型。
-- 2024-12-04 支持知识库的 Pagerank 分数。
-- 2024-11-22 完善了 Agent 中的变量定义和使用。
 - 2024-11-01 对解析后的 chunk 加入关键词抽取和相关问题生成以提高召回的准确度。
 - 2024-08-22 支持用 RAG 技术实现从自然语言到 SQL 语句的转换。
 
@@ -254,7 +252,7 @@ RAGFlow 默认使用 Elasticsearch 存储文本和向量数据. 如果要切换�
 ```bash
 git clone https://github.com/infiniflow/ragflow.git
 cd ragflow/
-docker build --build-arg LIGHTEN=1 --build-arg NEED_MIRROR=1 -f Dockerfile -t infiniflow/ragflow:nightly-slim .
+docker build --platform linux/amd64 --build-arg LIGHTEN=1 --build-arg NEED_MIRROR=1 -f Dockerfile -t infiniflow/ragflow:nightly-slim .
 ```
 
 ## 🔧 源码编译 Docker 镜像（包含 embedding 模型）
@@ -264,7 +262,7 @@ docker build --build-arg LIGHTEN=1 --build-arg NEED_MIRROR=1 -f Dockerfile -t in
 ```bash
 git clone https://github.com/infiniflow/ragflow.git
 cd ragflow/
-docker build --build-arg NEED_MIRROR=1 -f Dockerfile -t infiniflow/ragflow:nightly .
+docker build --platform linux/amd64 --build-arg NEED_MIRROR=1 -f Dockerfile -t infiniflow/ragflow:nightly .
 ```
 
 ## 🔨 以源代码启动服务
@@ -290,12 +288,11 @@ docker build --build-arg NEED_MIRROR=1 -f Dockerfile -t infiniflow/ragflow:night
    docker compose -f docker/docker-compose-base.yml up -d
    ```
 
-   在 `/etc/hosts` 中添加以下代码，将 **conf/service_conf.yaml** 文件中的所有 host 地址都解析为 `127.0.0.1`：
+   在 `/etc/hosts` 中添加以下代码，目的是将 **conf/service_conf.yaml** 文件中的所有 host 地址都解析为 `127.0.0.1`：
 
    ```
    127.0.0.1       es01 infinity mysql minio redis
    ```
-
 4. 如果无法访问 HuggingFace，可以把环境变量 `HF_ENDPOINT` 设成相应的镜像站点：
 
    ```bash
@@ -324,6 +321,11 @@ docker build --build-arg NEED_MIRROR=1 -f Dockerfile -t infiniflow/ragflow:night
    _以下界面说明系统已经成功启动：_
 
    ![](https://github.com/user-attachments/assets/0daf462c-a24d-4496-a66f-92533534e187)
+8. 开发完成后停止 RAGFlow 服务
+   停止 RAGFlow 前端和后端服务：
+   ```bash
+   pkill -f "ragflow_server.py|task_executor.py"
+   ```
 
 ## 📚 技术文档
 
