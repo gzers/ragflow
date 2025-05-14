@@ -100,9 +100,13 @@ class TenantLLMService(CommonService):
 
         model_config = cls.get_api_key(tenant_id, mdlnm)
         mdlnm, fid = TenantLLMService.split_model_name_and_factory(mdlnm)
+        if not model_config:  # for some cases seems fid mismatch
+            model_config = cls.get_api_key(tenant_id, mdlnm)
         if model_config:
             model_config = model_config.to_dict()
             llm = LLMService.query(llm_name=mdlnm) if not fid else LLMService.query(llm_name=mdlnm, fid=fid)
+            if not llm and fid:  # for some cases seems fid mismatch
+                llm = LLMService.query(llm_name=mdlnm)
             if llm:
                 model_config["is_tools"] = llm[0].is_tools
         if not model_config:
@@ -356,21 +360,22 @@ class LLMBundle:
 
         ans = ""
         chat_streamly = self.mdl.chat_streamly
-
+        total_tokens = 0
         if self.is_tools and self.mdl.is_tools:
             chat_streamly = self.mdl.chat_streamly_with_tools
 
         for txt in chat_streamly(system, history, gen_conf):
             if isinstance(txt, int):
+                total_tokens = txt
                 if self.langfuse:
                     generation.end(output={"output": ans})
-
-                if not TenantLLMService.increase_usage(self.tenant_id, self.llm_type, txt, self.llm_name):
-                    logging.error("LLMBundle.chat_streamly can't update token usage for {}/CHAT llm_name: {}, content: {}".format(self.tenant_id, self.llm_name, txt))
-                return ans
+                break
 
             if txt.endswith("</think>"):
                 ans = ans.rstrip("</think>")
 
             ans += txt
             yield ans
+        if total_tokens > 0:
+            if not TenantLLMService.increase_usage(self.tenant_id, self.llm_type, txt, self.llm_name):
+                logging.error("LLMBundle.chat_streamly can't update token usage for {}/CHAT llm_name: {}, content: {}".format(self.tenant_id, self.llm_name, txt))
