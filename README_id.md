@@ -5,13 +5,13 @@
 </div>
 
 <p align="center">
-  <a href="./README.md">English</a> |
-  <a href="./README_zh.md">简体中文</a> |
-  <a href="./README_tzh.md">繁体中文</a> |
-  <a href="./README_ja.md">日本語</a> |
-  <a href="./README_ko.md">한국어</a> |
-  <a href="./README_id.md">Bahasa Indonesia</a> |
-  <a href="/README_pt_br.md">Português (Brasil)</a>
+  <a href="./README.md"><img alt="README in English" src="https://img.shields.io/badge/English-DFE0E5"></a>
+  <a href="./README_zh.md"><img alt="简体中文版自述文件" src="https://img.shields.io/badge/简体中文-DFE0E5"></a>
+  <a href="./README_tzh.md"><img alt="繁體中文版自述文件" src="https://img.shields.io/badge/繁體中文-DFE0E5"></a>
+  <a href="./README_ja.md"><img alt="日本語のREADME" src="https://img.shields.io/badge/日本語-DFE0E5"></a>
+  <a href="./README_ko.md"><img alt="한국어" src="https://img.shields.io/badge/한국어-DFE0E5"></a>
+  <a href="./README_id.md"><img alt="Bahasa Indonesia" src="https://img.shields.io/badge/Bahasa Indonesia-DBEDFA"></a>
+  <a href="./README_pt_br.md"><img alt="Português(Brasil)" src="https://img.shields.io/badge/Português(Brasil)-DFE0E5"></a>
 </p>
 
 <p align="center">
@@ -22,13 +22,16 @@
         <img alt="Lencana Daring" src="https://img.shields.io/badge/Online-Demo-4e6b99">
     </a>
     <a href="https://hub.docker.com/r/infiniflow/ragflow" target="_blank">
-        <img src="https://img.shields.io/badge/docker_pull-ragflow:v0.18.0-brightgreen" alt="docker pull infiniflow/ragflow:v0.18.0">
+        <img src="https://img.shields.io/docker/pulls/infiniflow/ragflow?label=Docker%20Pulls&color=0db7ed&logo=docker&logoColor=white&style=flat-square" alt="docker pull infiniflow/ragflow:v0.20.0">
     </a>
     <a href="https://github.com/infiniflow/ragflow/releases/latest">
         <img src="https://img.shields.io/github/v/release/infiniflow/ragflow?color=blue&label=Rilis%20Terbaru" alt="Rilis Terbaru">
     </a>
     <a href="https://github.com/infiniflow/ragflow/blob/main/LICENSE">
         <img height="21" src="https://img.shields.io/badge/Lisensi-Apache--2.0-ffffff?labelColor=d4eaf7&color=2e6cc4" alt="Lisensi">
+    </a>
+    <a href="https://deepwiki.com/infiniflow/ragflow">
+        <img alt="Ask DeepWiki" src="https://deepwiki.com/badge.svg">
     </a>
 </p>
 
@@ -39,6 +42,8 @@
   <a href="https://discord.gg/NjYzJD3GM3">Discord</a> |
   <a href="https://demo.ragflow.io">Demo</a>
 </h4>
+
+#
 
 <details open>
 <summary><b>📕 Daftar Isi </b> </summary>
@@ -69,17 +74,20 @@
 Coba demo kami di [https://demo.ragflow.io](https://demo.ragflow.io).
 
 <div align="center" style="margin-top:20px;margin-bottom:20px;">
-<img src="https://github.com/infiniflow/ragflow/assets/7248/2f6baa3e-1092-4f11-866d-36f6a9d075e5" width="1200"/>
-<img src="https://github.com/user-attachments/assets/504bbbf1-c9f7-4d83-8cc5-e9cb63c26db6" width="1200"/>
+<img src="https://raw.githubusercontent.com/infiniflow/ragflow-docs/refs/heads/image/image/chunking.gif" width="1200"/>
+<img src="https://raw.githubusercontent.com/infiniflow/ragflow-docs/refs/heads/image/image/agentic-dark.gif" width="1200"/>
 </div>
 
 ## 🔥 Pembaruan Terbaru
 
+- 2025-08-08 Mendukung model seri GPT-5 terbaru dari OpenAI.
+- 2025-08-04 Mendukung model baru, termasuk Kimi K2 dan Grok 4.
+- 2025-08-01 Mendukung alur kerja agen dan MCP.
+- 2025-05-23 Menambahkan komponen pelaksana kode Python/JS ke Agen.
+- 2025-05-05 Mendukung kueri lintas bahasa.
 - 2025-03-19 Mendukung penggunaan model multi-modal untuk memahami gambar di dalam file PDF atau DOCX.
 - 2025-02-28 dikombinasikan dengan pencarian Internet (TAVILY), mendukung penelitian mendalam untuk LLM apa pun.
-- 2025-01-26 Optimalkan ekstraksi dan penerapan grafik pengetahuan dan sediakan berbagai opsi konfigurasi.
 - 2024-12-18 Meningkatkan model Analisis Tata Letak Dokumen di DeepDoc.
-- 2024-11-01 Penambahan ekstraksi kata kunci dan pembuatan pertanyaan terkait untuk meningkatkan akurasi pengambilan.
 - 2024-08-22 Dukungan untuk teks ke pernyataan SQL melalui RAG.
 
 ## 🎉 Tetap Terkini
@@ -132,6 +140,10 @@ Coba demo kami di [https://demo.ragflow.io](https://demo.ragflow.io).
 - RAM >= 16 GB
 - Disk >= 50 GB
 - Docker >= 24.0.0 & Docker Compose >= v2.26.1
+- [gVisor](https://gvisor.dev/docs/user_guide/install/): Hanya diperlukan jika Anda ingin menggunakan fitur eksekutor kode (sandbox) dari RAGFlow.
+
+> [!TIP]
+> Jika Anda belum menginstal Docker di komputer lokal Anda (Windows, Mac, atau Linux), lihat [Install Docker Engine](https://docs.docker.com/engine/install/).
 
 ### 🚀 Menjalankan Server
 
@@ -169,7 +181,7 @@ Coba demo kami di [https://demo.ragflow.io](https://demo.ragflow.io).
 > Semua gambar Docker dibangun untuk platform x86. Saat ini, kami tidak menawarkan gambar Docker untuk ARM64.
 > Jika Anda menggunakan platform ARM64, [silakan gunakan panduan ini untuk membangun gambar Docker yang kompatibel dengan sistem Anda](https://ragflow.io/docs/dev/build_docker_image).
 
-> Perintah di bawah ini mengunduh edisi v0.18.0-slim dari gambar Docker RAGFlow. Silakan merujuk ke tabel berikut untuk deskripsi berbagai edisi RAGFlow. Untuk mengunduh edisi RAGFlow yang berbeda dari v0.18.0-slim, perbarui variabel RAGFLOW_IMAGE di docker/.env sebelum menggunakan docker compose untuk memulai server. Misalnya, atur RAGFLOW_IMAGE=infiniflow/ragflow:v0.18.0 untuk edisi lengkap v0.18.0.
+> Perintah di bawah ini mengunduh edisi v0.20.0-slim dari gambar Docker RAGFlow. Silakan merujuk ke tabel berikut untuk deskripsi berbagai edisi RAGFlow. Untuk mengunduh edisi RAGFlow yang berbeda dari v0.20.0-slim, perbarui variabel RAGFLOW_IMAGE di docker/.env sebelum menggunakan docker compose untuk memulai server. Misalnya, atur RAGFLOW_IMAGE=infiniflow/ragflow:v0.20.0 untuk edisi lengkap v0.20.0.
 
 ```bash
 $ cd ragflow/docker
@@ -182,8 +194,8 @@ $ docker compose -f docker-compose.yml up -d
 
 | RAGFlow image tag | Image size (GB) | Has embedding models? | Stable?                  |
 | ----------------- | --------------- | --------------------- | ------------------------ |
-| v0.18.0           | &approx;9       | :heavy_check_mark:    | Stable release           |
-| v0.18.0-slim      | &approx;2       | ❌                    | Stable release           |
+| v0.20.0           | &approx;9       | :heavy_check_mark:    | Stable release           |
+| v0.20.0-slim      | &approx;2       | ❌                    | Stable release           |
 | nightly           | &approx;9       | :heavy_check_mark:    | _Unstable_ nightly build |
 | nightly-slim      | &approx;2       | ❌                    | _Unstable_ nightly build |
 
@@ -284,7 +296,7 @@ docker build --platform linux/amd64 -f Dockerfile -t infiniflow/ragflow:nightly 
    Tambahkan baris berikut ke `/etc/hosts` untuk memetakan semua host yang ditentukan di **conf/service_conf.yaml** ke `127.0.0.1`:
 
    ```
-   127.0.0.1       es01 infinity mysql minio redis
+   127.0.0.1       es01 infinity mysql minio redis sandbox-executor-manager
    ```
 
 4. Jika Anda tidak dapat mengakses HuggingFace, atur variabel lingkungan `HF_ENDPOINT` untuk menggunakan situs mirror:
@@ -293,7 +305,16 @@ docker build --platform linux/amd64 -f Dockerfile -t infiniflow/ragflow:nightly 
    export HF_ENDPOINT=https://hf-mirror.com
    ```
 
-5. Jalankan aplikasi backend:
+5. Jika sistem operasi Anda tidak memiliki jemalloc, instal sebagai berikut:
+
+   ```bash
+   # ubuntu
+   sudo apt-get install libjemalloc-dev
+   # centos
+   sudo yum install jemalloc
+   ```
+
+6. Jalankan aplikasi backend:
 
    ```bash
    source .venv/bin/activate
@@ -301,12 +322,14 @@ docker build --platform linux/amd64 -f Dockerfile -t infiniflow/ragflow:nightly 
    bash docker/launch_backend_service.sh
    ```
 
-6. Instal dependensi frontend:
+7. Instal dependensi frontend:
+
    ```bash
    cd web
    npm install
    ```
-7. Jalankan aplikasi frontend:
+
+8. Jalankan aplikasi frontend:
 
    ```bash
    npm run dev
@@ -315,6 +338,14 @@ docker build --platform linux/amd64 -f Dockerfile -t infiniflow/ragflow:nightly 
    _Output berikut menandakan bahwa sistem berhasil diluncurkan:_
 
    ![](https://github.com/user-attachments/assets/0daf462c-a24d-4496-a66f-92533534e187)
+
+
+9. Hentikan layanan front-end dan back-end RAGFlow setelah pengembangan selesai:
+
+   ```bash
+   pkill -f "ragflow_server.py|task_executor.py"
+   ```
+
 
 ## 📚 Dokumentasi
 
@@ -339,4 +370,4 @@ Lihat [Roadmap RAGFlow 2025](https://github.com/infiniflow/ragflow/issues/4214)
 ## 🙌 Kontribusi
 
 RAGFlow berkembang melalui kolaborasi open-source. Dalam semangat ini, kami menerima kontribusi dari komunitas.
-Jika Anda ingin berpartisipasi, tinjau terlebih dahulu [Panduan Kontribusi](./CONTRIBUTING.md).
+Jika Anda ingin berpartisipasi, tinjau terlebih dahulu [Panduan Kontribusi](https://ragflow.io/docs/dev/contributing).

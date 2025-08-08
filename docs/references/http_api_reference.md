@@ -1,5 +1,5 @@
 ---
-sidebar_position: 1
+sidebar_position: 4
 slug: /http_api_reference
 ---
 
@@ -343,7 +343,6 @@ Creates a dataset.
   - `"embedding_model"`: `string`
   - `"permission"`: `string`
   - `"chunk_method"`: `string`
-  - `"pagerank"`: `int`
   - `"parser_config"`: `object`
 
 ##### Request example
@@ -384,12 +383,6 @@ curl --request POST \
   - `"me"`: (Default) Only you can manage the dataset.
   - `"team"`: All team members can manage the dataset.
 
-- `"pagerank"`: (*Body parameter*), `int`  
-  refer to [Set page rank](https://ragflow.io/docs/dev/set_page_rank)
-  - Default: `0`
-  - Minimum: `0`
-  - Maximum: `100`
-
 - `"chunk_method"`: (*Body parameter*), `enum<string>`  
   The chunking method of the dataset to create. Available options:  
   - `"naive"`: General (default)
@@ -417,7 +410,7 @@ curl --request POST \
       - Minimum: `0`
       - Maximum: `10`
     - `"chunk_token_num"`: `int`
-      - Defaults to `128`
+      - Defaults to `512`
       - Minimum: `1`
       - Maximum: `2048`
     - `"delimiter"`: `string`
@@ -507,7 +500,7 @@ Deletes datasets by ID.
   - `'content-Type: application/json'`
   - `'Authorization: Bearer <YOUR_API_KEY>'`
   - Body:
-    - `"ids"`: `list[string]`
+    - `"ids"`: `list[string]` or `null`
 
 ##### Request example
 
@@ -517,14 +510,17 @@ curl --request DELETE \
      --header 'Content-Type: application/json' \
      --header 'Authorization: Bearer <YOUR_API_KEY>' \
      --data '{
-     "ids": ["test_1", "test_2"]
+     "ids": ["d94a8dc02c9711f0930f7fbc369eab6d", "e94a8dc02c9711f0930f7fbc369eab6e"]
      }'
 ```
 
 ##### Request parameters
 
-- `"ids"`: (*Body parameter*), `list[string]`  
-  The IDs of the datasets to delete. If it is not specified, all datasets will be deleted.
+- `"ids"`: (*Body parameter*), `list[string]` or `null`,   *Required*  
+  Specifies the datasets to delete:
+  - If `null`, all datasets will be deleted.
+  - If an array of IDs, only the specified datasets will be deleted.
+  - If an empty array, no datasets will be deleted.
 
 #### Response
 
@@ -635,7 +631,7 @@ curl --request PUT \
       - Minimum: `0`
       - Maximum: `10`
     - `"chunk_token_num"`: `int`
-      - Defaults to `128`
+      - Defaults to `512`
       - Minimum: `1`
       - Maximum: `2048`
     - `"delimiter"`: `string`
@@ -770,7 +766,132 @@ Failure:
     "message": "The dataset doesn't exist"
 }
 ```
+ ---
 
+## Get dataset's knowledge graph
+
+**GET** `/api/v1/datasets/{dataset_id}/knowledge_graph`
+
+Retrieves the knowledge graph of a specified dataset.
+
+#### Request
+
+- Method: GET
+- URL: `/api/v1/datasets/{dataset_id}/knowledge_graph`
+- Headers:
+  - `'Authorization: Bearer <YOUR_API_KEY>'`
+
+##### Request example
+
+```bash
+curl --request GET \
+     --url http://{address}/api/v1/datasets/{dataset_id}/knowledge_graph \
+     --header 'Authorization: Bearer <YOUR_API_KEY>'
+```
+
+##### Request parameters
+
+- `dataset_id`: (*Path parameter*)  
+  The ID of the target dataset.
+
+#### Response
+
+Success:
+
+```json
+{
+    "code": 0,
+    "data": {
+        "graph": {
+            "directed": false,
+            "edges": [
+                {
+                    "description": "The notice is a document issued to convey risk warnings and operational alerts.<SEP>The notice is a specific instance of a notification document issued under the risk warning framework.",
+                    "keywords": ["9", "8"],
+                    "source": "notice",
+                    "source_id": ["8a46cdfe4b5c11f0a5281a58e595aa1c"],
+                    "src_id": "xxx",
+                    "target": "xxx",
+                    "tgt_id": "xxx",
+                    "weight": 17.0
+                }
+            ],
+            "graph": {
+                "source_id": ["8a46cdfe4b5c11f0a5281a58e595aa1c", "8a7eb6424b5c11f0a5281a58e595aa1c"]
+            },
+            "multigraph": false,
+            "nodes": [
+                {
+                    "description": "xxx",
+                    "entity_name": "xxx",
+                    "entity_type": "ORGANIZATION",
+                    "id": "xxx",
+                    "pagerank": 0.10804906590624092,
+                    "rank": 3,
+                    "source_id": ["8a7eb6424b5c11f0a5281a58e595aa1c"]
+                }
+            ]
+        },
+        "mind_map": {}
+    }
+}
+```
+
+Failure:
+
+```json
+{
+    "code": 102,
+    "message": "The dataset doesn't exist"
+}
+```
+---
+
+## Delete dataset's knowledge graph
+
+**DELETE** `/api/v1/datasets/{dataset_id}/knowledge_graph`
+
+Removes the knowledge graph of a specified dataset.
+
+#### Request
+
+- Method: DELETE
+- URL: `/api/v1/datasets/{dataset_id}/knowledge_graph`
+- Headers:
+  - `'Authorization: Bearer <YOUR_API_KEY>'`
+
+##### Request example
+
+```bash
+curl --request DELETE \
+     --url http://{address}/api/v1/datasets/{dataset_id}/knowledge_graph \
+     --header 'Authorization: Bearer <YOUR_API_KEY>'
+```
+
+##### Request parameters
+
+- `dataset_id`: (*Path parameter*)  
+  The ID of the target dataset.
+
+#### Response
+
+Success:
+
+```json
+{
+    "code": 0,
+    "data": true
+}
+```
+
+Failure:
+
+```json
+{
+    "code": 102,
+    "message": "The dataset doesn't exist"
+}
+```
 ---
 
 ## FILE MANAGEMENT WITHIN DATASET
@@ -885,7 +1006,7 @@ curl --request PUT \
      {
           "name": "manual.txt", 
           "chunk_method": "manual", 
-          "parser_config": {"chunk_token_count": 128}
+          "parser_config": {"chunk_token_num": 128}
      }'
 
 ```
@@ -897,7 +1018,7 @@ curl --request PUT \
 - `document_id`: (*Path parameter*)  
   The ID of the document to update.
 - `"name"`: (*Body parameter*), `string`
-- `"meta_fields"`: (*Body parameter*)， `dict[str, Any]` The meta fields of the document.
+- `"meta_fields"`: (*Body parameter*), `dict[str, Any]` The meta fields of the document.
 - `"chunk_method"`: (*Body parameter*), `string`  
   The parsing method to apply to the document:  
   - `"naive"`: General
@@ -914,7 +1035,7 @@ curl --request PUT \
 - `"parser_config"`: (*Body parameter*), `object`  
   The configuration settings for the dataset parser. The attributes in this JSON object vary with the selected `"chunk_method"`:  
   - If `"chunk_method"` is `"naive"`, the `"parser_config"` object contains the following attributes:
-    - `"chunk_token_count"`: Defaults to `256`.
+    - `"chunk_token_num"`: Defaults to `256`.
     - `"layout_recognize"`: Defaults to `true`.
     - `"html4excel"`: Indicates whether to convert Excel documents into HTML format. Defaults to `false`.
     - `"delimiter"`: Defaults to `"\n"`.
@@ -997,14 +1118,14 @@ Failure:
 
 ### List documents
 
-**GET** `/api/v1/datasets/{dataset_id}/documents?page={page}&page_size={page_size}&orderby={orderby}&desc={desc}&keywords={keywords}&id={document_id}&name={document_name}`
+**GET** `/api/v1/datasets/{dataset_id}/documents?page={page}&page_size={page_size}&orderby={orderby}&desc={desc}&keywords={keywords}&id={document_id}&name={document_name}&create_time_from={timestamp}&create_time_to={timestamp}`
 
 Lists documents in a specified dataset.
 
 #### Request
 
 - Method: GET
-- URL: `/api/v1/datasets/{dataset_id}/documents?page={page}&page_size={page_size}&orderby={orderby}&desc={desc}&keywords={keywords}&id={document_id}&name={document_name}`
+- URL: `/api/v1/datasets/{dataset_id}/documents?page={page}&page_size={page_size}&orderby={orderby}&desc={desc}&keywords={keywords}&id={document_id}&name={document_name}&create_time_from={timestamp}&create_time_to={timestamp}`
 - Headers:
   - `'content-Type: application/json'`
   - `'Authorization: Bearer <YOUR_API_KEY>'`
@@ -1013,7 +1134,7 @@ Lists documents in a specified dataset.
 
 ```bash
 curl --request GET \
-     --url http://{address}/api/v1/datasets/{dataset_id}/documents?page={page}&page_size={page_size}&orderby={orderby}&desc={desc}&keywords={keywords}&id={document_id}&name={document_name} \
+     --url http://{address}/api/v1/datasets/{dataset_id}/documents?page={page}&page_size={page_size}&orderby={orderby}&desc={desc}&keywords={keywords}&id={document_id}&name={document_name}&create_time_from={timestamp}&create_time_to={timestamp} \
      --header 'Authorization: Bearer <YOUR_API_KEY>'
 ```
 
@@ -1035,6 +1156,10 @@ curl --request GET \
   Indicates whether the retrieved documents should be sorted in descending order. Defaults to `true`.
 - `id`: (*Filter parameter*), `string`  
   The ID of the document to retrieve.
+- `create_time_from`: (*Filter parameter*), `integer`
+  Unix timestamp for filtering documents created after this time. 0 means no filter. Defaults to `0`.
+- `create_time_to`: (*Filter parameter*), `integer`
+  Unix timestamp for filtering documents created before this time. 0 means no filter. Defaults to `0`.
 
 #### Response
 
@@ -1062,7 +1187,7 @@ Success:
                 },
                 "chunk_method": "naive",
                 "process_begin_at": null,
-                "process_duation": 0.0,
+                "process_duration": 0.0,
                 "progress": 0.0,
                 "progress_msg": "",
                 "run": "0",
@@ -1421,7 +1546,7 @@ Success:
                 }
             },
             "process_begin_at": "Thu, 24 Oct 2024 09:56:44 GMT",
-            "process_duation": 0.54213,
+            "process_duration": 0.54213,
             "progress": 0.0,
             "progress_msg": "Task dispatched...",
             "run": "2",
@@ -1604,6 +1729,7 @@ Retrieves chunks from specified datasets.
   - `"rerank_id"`: `string`  
   - `"keyword"`: `boolean`  
   - `"highlight"`: `boolean`
+  - `"cross_languages"`: `list[string]`  
 
 ##### Request example
 
@@ -1648,6 +1774,8 @@ curl --request POST \
   Specifies whether to enable highlighting of matched terms in the results:  
   - `true`: Enable highlighting of matched terms.
   - `false`: Disable highlighting of matched terms (default).
+- `"cross_languages"`: (*Body parameter*) `list[string]`  
+  The languages that should be translated into, in order to achieve keywords retrievals in different languages.
 
 #### Response
 
@@ -2139,7 +2267,7 @@ Success:
         "id": "4606b4ec87ad11efbc4f0242ac120006",
         "messages": [
             {
-                "content": "Hi! I am your assistant，can I help you?",
+                "content": "Hi! I am your assistant, can I help you?",
                 "role": "assistant"
             }
         ],
@@ -2280,7 +2408,7 @@ Success:
             "id": "578d541e87ad11ef96b90242ac120006",
             "messages": [
                 {
-                    "content": "Hi! I am your assistant，can I help you?",
+                    "content": "Hi! I am your assistant, can I help you?",
                     "role": "assistant"
                 }
             ],
@@ -3224,38 +3352,42 @@ Failure:
 
 ---
 
-### Related Questions
+### Generate related questions
 
-**POST** `/v1/conversation/related_questions`
+**POST** `/v1/sessions/related_questions`
 
 Generates five to ten alternative question strings from the user's original query to retrieve more relevant search results.
 
-This operation requires a `Bearer Login Token`, typically expires with in 24 hours. You can find the it in the browser request easily.
+This operation requires a `Bearer Login Token`, which typically expires with in 24 hours. You can find the it in the Request Headers in your browser easily as shown below:
+
+![Image](https://raw.githubusercontent.com/infiniflow/ragflow-docs/main/images/login_token.jpg)
 
 :::tip NOTE
-The chat model dynamically determines the number of questions to generate based on the instruction, typically between five and ten.
+The chat model autonomously determines the number of questions to generate based on the instruction, typically between five and ten.
 :::
 
 #### Request
 
 - Method: POST
-- URL: `/v1/conversation/related_questions`
+- URL: `/v1/sessions/related_questions`
 - Headers:
   - `'content-Type: application/json'`
   - `'Authorization: Bearer <YOUR_LOGIN_TOKEN>'`
 - Body:
   - `"question"`: `string`
+  - `"industry"`: `string`
 
 ##### Request example
 
 ```bash
 curl --request POST \
-     --url http://{address}/v1/conversation/related_questions \
+     --url http://{address}/v1/sessions/related_questions \
      --header 'Content-Type: application/json' \
      --header 'Authorization: Bearer <YOUR_LOGIN_TOKEN>' \
      --data '
      {
-          "question": "What are the key advantages of Neovim over Vim?"
+          "question": "What are the key advantages of Neovim over Vim?",
+          "industry": "software_development"
      }'
 ```
 
@@ -3263,6 +3395,8 @@ curl --request POST \
 
 - `"question"`: (*Body Parameter*), `string`
   The original user question.
+- `"industry"`: (*Body Parameter*), `string`
+  Industry of the question.
 
 #### Response
 

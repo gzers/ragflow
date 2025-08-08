@@ -38,6 +38,14 @@ export default {
       previousPage: 'Previous',
       nextPage: 'Next',
       add: 'Add',
+      promptPlaceholder: `Please input or use / to quickly insert variables.`,
+      mcp: {
+        namePlaceholder: 'My MCP Server',
+        nameRequired:
+          'It must be 1–64 characters long and can only contain letters, numbers, hyphens, and underscores.',
+        urlPlaceholder: 'https://api.example.com/v1/mcp',
+        tokenPlaceholder: 'e.g. eyJhbGciOiJIUzI1Ni...',
+      },
     },
     login: {
       login: 'Sign in',
@@ -162,18 +170,18 @@ export default {
       cancel: 'Cancel',
       rerankModel: 'Rerank model',
       rerankPlaceholder: 'Please select',
-      rerankTip: `If left empty, RAGFlow will use a combination of weighted keyword similarity and weighted vector cosine similarity; if a rerank model is selected, a weighted reranking score will replace the weighted vector cosine similarity. Please be aware that using a rerank model will significantly increase the system's response time.`,
+      rerankTip: `Optional. If left empty, RAGFlow will use a combination of weighted keyword similarity and weighted vector cosine similarity; if a rerank model is selected, a weighted reranking score will replace the weighted vector cosine similarity. Please be aware that using a rerank model will significantly increase the system's response time. If you wish to use a rerank model, ensure you use a SaaS reranker; if you prefer a locally deployed rerank model, ensure you start RAGFlow with docker-compose-gpu.yml.`,
       topK: 'Top-K',
       topKTip: `Used together with the Rerank model, this setting defines the number of text chunks to be sent to the specified reranking model.`,
       delimiter: `Delimiter for text`,
       delimiterTip:
         'A delimiter or separator can consist of one or multiple special characters. If it is multiple characters, ensure they are enclosed in backticks( ``). For example, if you configure your delimiters like this: \\n`##`;, then your texts will be separated at line breaks, double hash symbols (##), and semicolons.',
       html4excel: 'Excel to HTML',
-      html4excelTip: `Use with the General chunking method. When disabled, spreadsheets (XLSX or XLS(Excel97~2003)) in the knowledge base will be parsed into key-value pairs. When enabled, they will be parsed into HTML tables, splitting every 12 rows if the original table has more than 12 rows.`,
+      html4excelTip: `Use with the General chunking method. When disabled, spreadsheets (XLSX or XLS(Excel 97-2003)) in the knowledge base will be parsed into key-value pairs. When enabled, they will be parsed into HTML tables, splitting every 12 rows if the original table has more than 12 rows.`,
       autoKeywords: 'Auto-keyword',
-      autoKeywordsTip: `Automatically extract N keywords for each chunk to increase their ranking for queries containing those keywords. Be aware that extra tokens will be consumed by the chat model specified in 'System model settings'. You can check or update the added keywords for a chunk from the chunk list. `,
+      autoKeywordsTip: `Automatically extract N keywords for each chunk to increase their ranking for queries containing those keywords. Be aware that extra tokens will be consumed by the chat model specified in 'System model settings'. You can check or update the added keywords for a chunk from the chunk list. For details, see https://ragflow.io/docs/dev/autokeyword_autoquestion.`,
       autoQuestions: 'Auto-question',
-      autoQuestionsTip: `Automatically extract N questions for each chunk to increase their ranking for queries containing those questions. You can check or update the added questions for a chunk from the chunk list. This feature will not disrupt the chunking process if an error occurs, except that it may add an empty result to the original chunk. Be aware that extra tokens will be consumed by the LLM specified in 'System model settings'.`,
+      autoQuestionsTip: `Automatically extract N questions for each chunk to increase their ranking for queries containing those questions. You can check or update the added questions for a chunk from the chunk list. This feature will not disrupt the chunking process if an error occurs, except that it may add an empty result to the original chunk. Be aware that extra tokens will be consumed by the LLM specified in 'System model settings'. For details, see https://ragflow.io/docs/dev/autokeyword_autoquestion.`,
       redo: 'Do you want to clear the existing {{chunkNum}} chunks?',
       setMetaData: 'Set Meta Data',
       pleaseInputJson: 'Please enter JSON',
@@ -207,6 +215,7 @@ export default {
         'Update your knowledge base configuration here, particularly the chunking method.',
       name: 'Knowledge base name',
       photo: 'Knowledge base photo',
+      photoTip: 'You can upload a file with 4 MB',
       description: 'Description',
       language: 'Document language',
       languageMessage: 'Please input your language!',
@@ -236,7 +245,7 @@ export default {
       methodTitle: 'Chunking method description',
       methodExamples: 'Examples',
       methodExamplesDescription:
-        'The following screenshots are provided for clarity.',
+        'The following screenshots are provided for clarification.',
       dialogueExamplesTitle: 'view',
       methodEmpty:
         'This will display a visual explanation of the knowledge base categories',
@@ -250,7 +259,7 @@ export default {
       manual: `<p>Only <b>PDF</b> is supported.</p><p>
       We assume that the manual has a hierarchical section structure, using the lowest section titles as basic unit for chunking documents. Therefore, figures and tables in the same section will not be separated, which may result in larger chunk sizes.
       </p>`,
-      naive: `<p>Supported file formats are <b>DOCX, XLSX, XLS (Excel97~2003), PPT, PDF, TXT, JPEG, JPG, PNG, TIF, GIF, CSV, JSON, EML, HTML</b>.</p>
+      naive: `<p>Supported file formats are <b>MD, MDX, DOCX, XLSX, XLS (Excel 97-2003), PPT, PDF, TXT, JPEG, JPG, PNG, TIF, GIF, CSV, JSON, EML, HTML</b>.</p>
       <p>This method chunks files using a 'naive' method: </p>
       <p>
       <li>Use vision detection model to split the texts into smaller segments.</li>
@@ -267,7 +276,7 @@ export default {
       This chunking method supports <b>XLSX</b> and <b>CSV/TXT</b> file formats.
     </p>
     <li>
-      If a file is in <b>XLSX</b> or <b>XLS (Excel97~2003)</b> format, it should contain two columns without headers: one for questions and the other for answers, with the question column preceding the answer column. Multiple sheets are
+      If a file is in <b>XLSX</b> or <b>XLS (Excel 97-2003)</b> format, it should contain two columns without headers: one for questions and the other for answers, with the question column preceding the answer column. Multiple sheets are
       acceptable, provided the columns are properly structured.
     </li>
     <li>
@@ -306,7 +315,7 @@ export default {
     If the text extracted by the OCR model is deemed insufficient, a specified visual LLM will be used to provide a description of the image.
     </p>`,
       one: `
-    <p>Supported file formats are <b>DOCX, XLSX, XLS (Excel97~2003), PDF, TXT</b>.
+    <p>Supported file formats are <b>DOCX, XLSX, XLS (Excel 97-2003), PDF, TXT</b>.
     </p><p>
     This method treats each document in its entirety as a chunk.
     </p><p>
@@ -317,8 +326,8 @@ export default {
 <p>This approach chunks files using the 'naive'/'General' method. It splits a document into segments and then combines adjacent segments until the token count exceeds the threshold specified by 'Chunk token number for text', at which point a chunk is created.</p>
 <p>The chunks are then fed to the LLM to extract entities and relationships for a knowledge graph and a mind map.</p>
 <p>Ensure that you set the <b>Entity types</b>.</p>`,
-      tag: `<p>A knowledge base using the 'Tag' chunking method functions as a tag set. Other knowledge bases can use it to tag their own chunks, and queries to these knowledge bases will also be tagged using this tag set.</p>
-<p>Knowledge base using 'Tag' as a chunking method will <b>NOT</b> be involved in a Retrieval-Augmented Generation (RAG) process.</p>
+      tag: `<p>A knowledge base using the 'Tag' chunking method functions as a tag set. Other knowledge bases use it to tag their chunks, and queries to these knowledge bases are also tagged using this tag set.</p>
+<p>A tag set will <b>NOT</b> be directly involved in a Retrieval-Augmented Generation (RAG) process.</p>
 <p>Each chunk in this knowledge base is an independent description-tag pair.</p>
 <p>Supported file formats include <b>XLSX</b> and <b>CSV/TXT</b>:</p>
 <p>If a file is in <b>XLSX</b> format, it should contain two columns without headers: one for tag descriptions and the other for tag names, with the Description column preceding the Tag column. Multiple sheets are acceptable, provided the columns are properly structured.</p>
@@ -406,6 +415,11 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       mind: 'Mind map',
       question: 'Question',
       questionTip: `If there are given questions, the embedding of the chunk will be based on them.`,
+      chunkResult: 'Chunk Result',
+      chunkResultTip: `View the chunked segments used for embedding and retrieval.`,
+      enable: 'Enable',
+      disable: 'Disable',
+      delete: 'Delete',
     },
     chat: {
       newConversation: 'New conversation',
@@ -442,7 +456,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       The above is the knowledge base.`,
       systemMessage: 'Please input!',
       systemTip:
-        'Your prompts or instructions for the LLM, including but not limited to its role, the desired length, tone, and language of its answers.',
+        'Your prompts or instructions for the LLM, including but not limited to its role, the desired length, tone, and language of its answers. If your model has native support for reasoning, you can add //no_thinking add the prompt to stop reasoning.',
       topN: 'Top N',
       topNTip: `Not all chunks with similarity score above the 'similarity threshold' will be sent to the LLM. This selects 'Top N' chunks from the retrieved ones.`,
       variable: 'Variable',
@@ -454,6 +468,9 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       model: 'Model',
       modelTip: 'Large language chat model',
       modelMessage: 'Please select!',
+      modelEnabledTools: 'Enabled tools',
+      modelEnabledToolsTip:
+        'Please select one or more tools for the chat model to use. It takes no effect for models not supporting tool call.',
       freedom: 'Freedom',
       improvise: 'Improvise',
       precise: 'Precise',
@@ -531,7 +548,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       useKnowledgeGraphTip:
         'Whether to use knowledge graph(s) in the specified knowledge base(s) during retrieval for multi-hop question answering. When enabled, this would involve iterative searches across entity, relationship, and community report chunks, greatly increasing retrieval time.',
       keyword: 'Keyword analysis',
-      keywordTip: `Apply LLM to analyze user's questions, extract keywords which will be emphasize during the relevance computation.`,
+      keywordTip: `Use LLM to analyze user's questions, extract keywords which will be emphasize during the relevance computation. Works well with lengthy queries but will increase response time.`,
       languageTip:
         'Allows sentence rewriting with the specified language or defaults to the latest question if not selected.',
       avatarHidden: 'Hide avatar',
@@ -545,9 +562,12 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       tavilyApiKeyHelp: 'How to get it?',
       crossLanguage: 'Cross-language search',
       crossLanguageTip: `Select one or more languages for cross‑language search. If no language is selected, the system searches with the original query.`,
+      createChat: 'Create chat',
     },
     setting: {
       profile: 'Profile',
+      avatar: 'Avatar',
+      avatarTip: 'This will be displayed on your profile.',
       profileDescription: 'Update your photo and personal details here.',
       maxTokens: 'Max Tokens',
       maxTokensMessage: 'Max Tokens is required',
@@ -580,6 +600,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       currentPassword: 'Current password',
       currentPasswordMessage: 'Please input your password!',
       newPassword: 'New password',
+      changePassword: 'Change Password',
       newPasswordMessage: 'Please input your password!',
       newPasswordDescription:
         'Your new password must be more than 8 characters.',
@@ -590,13 +611,14 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       cancel: 'Cancel',
       addedModels: 'Added models',
       modelsToBeAdded: 'Models to be added',
-      addTheModel: 'Add the model',
+      addTheModel: 'Add Model',
       apiKey: 'API-Key',
       apiKeyMessage:
         'Please enter the API key (for locally deployed model,ignore this).',
       apiKeyTip:
         'The API key can be obtained by registering the corresponding LLM supplier.',
-      showMoreModels: 'Show more models',
+      showMoreModels: 'View Models',
+      hideModels: 'Hide Models',
       baseUrl: 'Base-Url',
       baseUrlTip:
         'If your API key is from OpenAI, just ignore it. Any other intermediate providers will give this base url with the API key.',
@@ -622,6 +644,8 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       workspace: 'Workspace',
       upgrade: 'Upgrade',
       addLlmTitle: 'Add LLM',
+      editLlmTitle: 'Edit {{name}} Model',
+      editModel: 'Edit Model',
       modelName: 'Model name',
       modelID: 'Model ID',
       modelUid: 'Model UID',
@@ -691,7 +715,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
         'Please input Google Cloud Service Account Key in base64 format',
       addGoogleRegion: 'Google Cloud Region',
       GoogleRegionMessage: 'Please input Google Cloud Region',
-      modelProvidersWarn: `Please add both embedding model and LLM in <b>Settings > Model providers</b>  firstly. Then, set them in 'System model settings'.`,
+      modelProvidersWarn: `Please add both embedding model and LLM in <b>Settings > Model providers</b> first. Then, set them in 'Set default models'.`,
       apiVersion: 'API-Version',
       apiVersionMessage: 'Please input API version',
       add: 'Add',
@@ -717,6 +741,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       view: 'View',
       modelsToBeAddedTooltip:
         'If your model provider is not listed but claims to be "OpenAI-compatible", select the OpenAI-API-compatible card to add the relevant model(s). ',
+      mcp: 'MCP',
     },
     message: {
       registered: 'Registered!',
@@ -786,7 +811,9 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       examples: 'Examples',
       to: 'To',
       msg: 'Messages',
-      messagePlaceholder: 'message',
+      msgTip:
+        'Output the variable content of the upstream component or the text entered by yourself.',
+      messagePlaceholder: `Please enter your message content, use '/' to quickly insert variables.`,
       messageMsg: 'Please input message or delete this field.',
       addField: 'Add option',
       addMessage: 'Add message',
@@ -810,7 +837,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       relevantDescription: `A component that uses the LLM to assess whether the upstream output is relevant to the user's latest query. Ensure you specify the next component for each judge result.`,
       rewriteQuestionDescription: `A component that rewrites a user query from the Interact component, based on the context of previous dialogues.`,
       messageDescription:
-        "A component that sends out a static message. If multiple messages are supplied, it randomly selects one to send. Ensure its downstream is 'Interact', the interface component.",
+        'This component returns the final data output of the workflow along with predefined message content. ',
       keywordDescription: `A component that retrieves top N search results from user's input. Ensure the TopN value is set properly before use.`,
       switchDescription: `A component that evaluates conditions based on the output of previous components and directs the flow of execution accordingly. It allows for complex branching logic by defining cases and specifying actions for each case or default action if no conditions are met.`,
       wikipediaDescription: `A component that searches from wikipedia.org, using TopN to specify the number of search results. It supplements the existing knowledge bases.`,
@@ -1001,7 +1028,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
         '30d': '30 days',
       },
       publish: 'API',
-      exeSQL: 'ExeSQL',
+      exeSQL: 'Execute SQL',
       exeSQLDescription:
         'A component that performs SQL queries on a relational database, supporting querying from MySQL, PostgreSQL, or MariaDB.',
       dbType: 'Database Type',
@@ -1032,7 +1059,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       },
       operator: 'Operator',
       value: 'Value',
-      useTemplate: 'Use this template',
+      useTemplate: 'Use',
       wenCai: 'WenCai',
       queryType: 'Query type',
       wenCaiDescription:
@@ -1138,7 +1165,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       note: 'Note',
       noteDescription: 'Note',
       notePlaceholder: 'Please enter a note',
-      invoke: 'Invoke',
+      invoke: 'HTTP Request',
       invokeDescription: `A component capable of calling remote services, using other components' outputs or constants as inputs.`,
       url: 'Url',
       method: 'Method',
@@ -1189,10 +1216,7 @@ This auto-tagging feature enhances retrieval by adding another layer of domain-s
       jsonUploadTypeErrorMessage: 'Please upload json file',
       jsonUploadContentErrorMessage: 'json file error',
       iteration: 'Iteration',
-      iterationDescription: `This component firstly split the input into array by "delimiter".
-Perform the same operation steps on the elements in the array in sequence until all results are output, which can be understood as a task batch processor.
-
-For example, within the long text translation iteration node, if all content is input to the LLM node, the single conversation limit may be reached. The upstream node can first split the long text into multiple fragments, and cooperate with the iterative node to perform batch translation on each fragment to avoid reaching the LLM message limit for a single conversation.`,
+      iterationDescription: `A looping component that iterates over an input array and executes a defined logic for each item.`,
       delimiterTip: `
 This delimiter is used to split the input text into several text pieces echo of which will be performed as input item of each iteration.`,
       delimiterOptions: {
@@ -1262,6 +1286,98 @@ This delimiter is used to split the input text into several text pieces echo of 
       knowledgeBasesTip:
         'Select the knowledge bases to associate with this chat assistant, or choose variables containing knowledge base IDs below.',
       knowledgeBaseVars: 'Knowledge base variables',
+      code: 'Code',
+      codeDescription: 'It allows developers to write custom Python logic.',
+      inputVariables: 'Input variables',
+      runningHintText: 'is running...🕞',
+      openingSwitch: 'Opening switch',
+      openingCopy: 'Opening greeting',
+      openingSwitchTip:
+        'Your users will see this welcome message at the beginning.',
+      modeTip: 'The mode defines how the workflow is initiated.',
+      beginInputTip:
+        'By defining input parameters, this content can be accessed by other components in subsequent processes.',
+      query: 'Query variables',
+      agent: 'Agent',
+      agentDescription:
+        'Builds agent components equipped with reasoning, tool usage, and multi-agent collaboration. ',
+      maxRecords: 'Max records',
+      createAgent: 'Create Agent',
+      stringTransform: 'Text Processing',
+      userFillUp: 'Await Response',
+      userFillUpDescription: `Pauses the workflow and waits for the user's message before continuing.`,
+      codeExec: 'Code',
+      tavilySearch: 'Tavily Search',
+      tavilySearchDescription: 'Search results via Tavily service.',
+      tavilyExtract: 'Tavily Extract',
+      tavilyExtractDescription: 'Tavily Extract',
+      log: 'Log',
+      management: 'Management',
+      import: 'Import',
+      export: 'Export',
+      seconds: 'Seconds',
+      subject: 'Subject',
+      tag: 'Tag',
+      tagPlaceholder: 'Please enter tag',
+      descriptionPlaceholder: 'Please enter description',
+      line: 'Single-line text',
+      paragraph: 'Paragraph text',
+      options: 'Dropdown options',
+      file: 'File upload',
+      integer: 'Number',
+      boolean: 'Boolean',
+
+      logTimeline: {
+        begin: 'Ready to begin',
+        agent: 'Agent is thinking',
+        userFillUp: 'Waiting for you',
+        retrieval: 'Looking up knowledge',
+        message: 'Agent says',
+        awaitResponse: 'Waiting for you',
+        switch: 'Choosing the best path',
+        iteration: 'Batch processing',
+        categorize: 'Categorising info',
+        code: 'Running a quick script',
+        textProcessing: 'Tidying up text',
+        tavilySearch: 'Searching the web',
+        tavilyExtract: 'Reading the page',
+        exeSQL: 'Querying database',
+        google: 'Searching the web',
+        wikipedia: 'Searching Wikipedia',
+        googleScholar: 'Academic search',
+        gitHub: 'Searching GitHub',
+        email: 'Sending email',
+        httpRequest: 'Calling an API',
+        wenCai: 'Querying financial data',
+      },
+      goto: 'Fail Branch',
+      comment: 'Default Value',
+    },
+    llmTools: {
+      bad_calculator: {
+        name: 'Calculator',
+        description:
+          'A tool to calculate the sum of two numbers (will give wrong answer)',
+        params: {
+          a: 'The first number',
+          b: 'The second number',
+        },
+      },
+    },
+    modal: {
+      okText: 'Confirm',
+      cancelText: 'Cancel',
+    },
+    mcp: {
+      export: 'Export',
+      import: 'Import',
+      url: 'URL',
+      serverType: 'Server Type',
+      addMCP: 'Add MCP',
+      editMCP: 'Edit MCP',
+    },
+    search: {
+      createSearch: 'Create Search',
     },
   },
 };

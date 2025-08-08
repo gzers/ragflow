@@ -9,9 +9,95 @@ Key features, improvements and bug fixes in the latest releases.
 
 :::info
 Each RAGFlow release is available in two editions:
-- **Slim edition**: excludes built-in embedding models and is identified by a **-slim** suffix added to the version name. Example: `infiniflow/ragflow:v0.18.0-slim`
-- **Full edition**: includes built-in embedding models and has no suffix added to the version name. Example: `infiniflow/ragflow:v0.18.0`
+- **Slim edition**: excludes built-in embedding models and is identified by a **-slim** suffix added to the version name. Example: `infiniflow/ragflow:v0.19.1-slim`
+- **Full edition**: includes built-in embedding models and has no suffix added to the version name. Example: `infiniflow/ragflow:v0.19.1`
 :::
+
+:::danger IMPORTANT
+The embedding models included in a full edition are:
+
+- BAAI/bge-large-zh-v1.5
+- maidalun1020/bce-embedding-base_v1
+
+These two embedding models are optimized specifically for English and Chinese, so performance may be compromised if you use them to embed documents in other languages.
+:::
+
+## v0.20.0
+
+Released on August 4, 2025.
+
+### Compatibility changes
+
+From v0.20.0 onwards, Agents are no longer compatible with earlier versions, and all existing Agents from previous versions must be rebuilt following the upgrade.
+
+### New features
+
+- Unified orchestration of both Agents and Workflows.
+- A comprehensive refactor of the Agent, greatly enhancing its capabilities and usability, with support for Multi-Agent configurations, planning and reflection, and visual functionalities.
+- Fully implemented MCP functionality, allowing for MCP Server import, Agents functioning as MCP Clients, and RAGFlow itself operating as an MCP Server.
+- Access to runtime logs for Agents.
+- Chat histories with Agents available through the management panel.
+- Integration of a new, more robust version of Infinity, enabling the auto-tagging functionality with Infinity as the underlying document engine.
+- An OpenAI-compatible API that supports file reference information.
+- Support for new models, including Kimi K2, Grok 4, and Voyage embedding.
+- RAGFlow’s codebase is now mirrored on Gitee.
+- Introduction of a new model provider, Gitee AI.
+
+### New agent templates introduced
+
+- Multi-Agent based Deep Research: Collaborative Agent teamwork led by a Lead Agent with multiple Subagents, distinct from traditional workflow orchestration.
+- An intelligent Q&A chatbot leveraging internal knowledge bases, designed for customer service and training scenarios.
+- A resume analysis template used by the RAGFlow team to screen, analyze, and record candidate information.
+- A blog generation workflow that transforms raw ideas into SEO-friendly blog content.
+- An intelligent customer service workflow.
+- A user feedback analysis template that directs user feedback to appropriate teams through semantic analysis.
+- Trip Planner: Uses web search and map MCP servers to assist with travel planning.
+- Image Lingo: Translates content from uploaded photos.
+- An information search assistant that retrieves answers from both internal knowledge bases and the web.
+
+## v0.19.1
+
+Released on June 23, 2025.
+
+### Fixed issues
+
+- A memory leak issue during high-concurrency requests.
+- Large file parsing freezes when GraphRAG entity resolution is enabled. [#8223](https://github.com/infiniflow/ragflow/pull/8223)
+- A context error occurring when using Sandbox in standalone mode. [#8340](https://github.com/infiniflow/ragflow/pull/8340)
+- An excessive CPU usage issue caused by Ollama. [#8216](https://github.com/infiniflow/ragflow/pull/8216)
+- A bug in the Code Component. [#7949](https://github.com/infiniflow/ragflow/pull/7949)
+- Added support for models installed via Ollama or VLLM when creating a knowledge base through the API. [#8069](https://github.com/infiniflow/ragflow/pull/8069)
+- Enabled role-based authentication for S3 bucket access. [#8149](https://github.com/infiniflow/ragflow/pull/8149)
+
+### Added models
+
+- Qwen 3 Embedding. [#8184](https://github.com/infiniflow/ragflow/pull/8184) 
+- Voyage Multimodal 3. [#7987](https://github.com/infiniflow/ragflow/pull/7987)
+
+## v0.19.0
+
+Released on May 26, 2025.
+
+### New features
+
+- [Cross-language search](./references/glossary.mdx#cross-language-search) is supported in the Knowledge and Chat modules, enhancing search accuracy and user experience in multilingual environments, such as in Chinese-English knowledge bases.
+- Agent component: A new Code component supports Python and JavaScript scripts, enabling developers to handle more complex tasks like dynamic data processing.
+- Enhanced image display: Images in Chat and Search now render directly within responses, rather than as external references. Knowledge retrieval testing can retrieve images directly, instead of texts extracted from images.
+- Claude 4 and ChatGPT o3: Developers can now use the newly released, most advanced Claude model and OpenAI’s latest ChatGPT o3 inference model.
+
+> The following features have been contributed by our community:
+
+- Agent component: Enables tool calling within the Generate Component. Thanks to [notsyncing](https://github.com/notsyncing).
+- Markdown rendering: Image references in a markdown file can be displayed after chunking. Thanks to [Woody-Hu](https://github.com/Woody-Hu).
+- Document engine support: OpenSearch can now be used as RAGFlow's document engine. Thanks to [pyyuhao](https://github.com/pyyuhao).
+
+### Documentation
+
+#### Added documents
+
+- [Select PDF parser](./guides/dataset/select_pdf_parser.md)
+- [Enable Excel2HTML](./guides/dataset/enable_excel2html.md)
+- [Code component](./guides/agent/agent_component_reference/code.mdx)
 
 ## v0.18.0
 
@@ -89,9 +175,9 @@ Released on March 11, 2025.
 - Improves English tokenization quality.
 - Improves the table extraction logic in Markdown document parsing.
 - Updates SiliconFlow's model list.
-- Supports parsing XLS files (Excel97~2003) with improved corresponding error handling.
+- Supports parsing XLS files (Excel 97-2003) with improved corresponding error handling.
 - Supports Huggingface rerank models.
-- Enables relative time expressions ("now", "yesterday", "last week", "next year", and more) in the **Rewrite** agent component.
+- Enables relative time expressions ("now", "yesterday", "last week", "next year", and more) in chat assistant and the **Rewrite** agent component.
 
 ### Fixed issues
 
@@ -117,7 +203,7 @@ Released on March 3, 2025.
 - AI chat: Leverages Tavily-based web search to enhance contexts in agentic reasoning. To activate this, enter the correct Tavily API key under the **Assistant settings** tab of your chat assistant dialogue.
 - AI chat: Supports starting a chat without specifying knowledge bases.
 - AI chat: HTML files can also be previewed and referenced, in addition to PDF files.
-- Dataset: Adds a **PDF parser**, aka **Document parser**, dropdown menu to dataset configurations. This includes a DeepDoc model option, which is time-consuming, a much faster **naive** option (plain text), which skips DLA (Document Layout Analysis), OCR (Optical Character Recognition), and TSR (Table Structure Recognition) tasks, and several currently *experimental* large model options.
+- Dataset: Adds a **PDF parser**, aka **Document parser**, dropdown menu to dataset configurations. This includes a DeepDoc model option, which is time-consuming, a much faster **naive** option (plain text), which skips DLA (Document Layout Analysis), OCR (Optical Character Recognition), and TSR (Table Structure Recognition) tasks, and several currently *experimental* large model options. See [here](./guides/dataset/select_pdf_parser.md).
 - Agent component: **(x)** or a forward slash `/` can be used to insert available keys (variables) in the system prompt field of the **Generate** or **Template** component.
 - Object storage: Supports using Aliyun OSS (Object Storage Service) as a file storage option.
 - Models: Updates the supported model list for Tongyi-Qianwen (Qwen), adding DeepSeek-specific models; adds ModelScope as a model provider.

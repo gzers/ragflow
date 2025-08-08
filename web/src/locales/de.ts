@@ -106,7 +106,8 @@ export default {
       disabled: 'Deaktiviert',
       action: 'Aktion',
       parsingStatus: 'Analysestatus',
-      parsingStatusTip: 'Die Verarbeitungszeit für Dokumente variiert je nach mehreren Faktoren. Das Aktivieren von Funktionen wie Knowledge Graph, RAPTOR, automatischer Frage- oder Schlüsselwort-Extraktion verlängert die Bearbeitungszeit deutlich. Wenn der Fortschrittsbalken stehen bleibt, konsultieren Sie bitte diese beiden FAQs: https://ragflow.io/docs/dev/faq#why-does-my-document-parsing-stall-at-under-one-percent.',
+      parsingStatusTip:
+        'Die Verarbeitungszeit für Dokumente variiert je nach mehreren Faktoren. Das Aktivieren von Funktionen wie Knowledge Graph, RAPTOR, automatischer Frage- oder Schlüsselwort-Extraktion verlängert die Bearbeitungszeit deutlich. Wenn der Fortschrittsbalken stehen bleibt, konsultieren Sie bitte diese beiden FAQs: https://ragflow.io/docs/dev/faq#why-does-my-document-parsing-stall-at-under-one-percent.',
       processBeginAt: 'Beginn',
       processDuration: 'Dauer',
       progressMsg: 'Fortschritt',
@@ -143,7 +144,7 @@ export default {
       toMessage: 'Endseitennummer fehlt (ausgeschlossen)',
       layoutRecognize: 'Dokumentenparser',
       layoutRecognizeTip:
-        'Verwendet ein visuelles Modell für die PDF-Layout-Analyse, um Dokumententitel, Textblöcke, Bilder und Tabellen effektiv zu lokalisieren. Wenn die einfache Option gewählt wird, wird nur der reine Text im PDF abgerufen. Bitte beachten Sie, dass diese Option derzeit NUR für PDF-Dokumente funktioniert.',
+        'Verwendet ein visuelles Modell für die PDF-Layout-Analyse, um Dokumententitel, Textblöcke, Bilder und Tabellen effektiv zu lokalisieren. Wenn die einfache Option gewählt wird, wird nur der reine Text im PDF abgerufen. Bitte beachten Sie, dass diese Option derzeit NUR für PDF-Dokumente funktioniert. Weitere Informationen finden Sie unter https://ragflow.io/docs/dev/select_pdf_parser.',
       taskPageSize: 'Aufgabenseitengröße',
       taskPageSizeMessage: 'Bitte geben Sie die Größe der Aufgabenseite ein!',
       taskPageSizeTip:
@@ -172,13 +173,13 @@ export default {
         'Ein Trennzeichen oder Separator kann aus einem oder mehreren Sonderzeichen bestehen. Bei mehreren Zeichen stellen Sie sicher, dass sie in Backticks (` `) eingeschlossen sind. Wenn Sie beispielsweise Ihre Trennzeichen so konfigurieren: \\n`##`;, dann werden Ihre Texte an Zeilenumbrüchen, doppelten Rautenzeichen (##) oder Semikolons getrennt. Setzen Sie Trennzeichen nur nachdem Sie das Mechanismus der Textsegmentierung und -chunking verstanden haben.',
       html4excel: 'Excel zu HTML',
       html4excelTip:
-        'Verwenden Sie dies zusammen mit der General-Schnittmethode. Wenn deaktiviert, werden Tabellenkalkulationsdateien (XLSX, XLS (Excel97~2003)) zeilenweise in Schlüssel-Wert-Paare analysiert. Wenn aktiviert, werden Tabellenkalkulationsdateien in HTML-Tabellen umgewandelt. Wenn die ursprüngliche Tabelle mehr als 12 Zeilen enthält, teilt das System sie automatisch alle 12 Zeilen in mehrere HTML-Tabellen auf. Für weitere Informationen siehe https://ragflow.io/docs/dev/enable_excel2html.',
+        'Verwenden Sie dies zusammen mit der General-Schnittmethode. Wenn deaktiviert, werden Tabellenkalkulationsdateien (XLSX, XLS (Excel 97-2003)) zeilenweise in Schlüssel-Wert-Paare analysiert. Wenn aktiviert, werden Tabellenkalkulationsdateien in HTML-Tabellen umgewandelt. Wenn die ursprüngliche Tabelle mehr als 12 Zeilen enthält, teilt das System sie automatisch alle 12 Zeilen in mehrere HTML-Tabellen auf. Für weitere Informationen siehe https://ragflow.io/docs/dev/enable_excel2html.',
       autoKeywords: 'Auto-Schlüsselwort',
       autoKeywordsTip:
-        'Extrahieren Sie automatisch N Schlüsselwörter für jeden Abschnitt, um deren Ranking in Abfragen mit diesen Schlüsselwörtern zu verbessern. Beachten Sie, dass zusätzliche Tokens vom in den "Systemmodelleinstellungen" angegebenen Chat-Modell verbraucht werden. Sie können die hinzugefügten Schlüsselwörter eines Abschnitts in der Abschnittsliste überprüfen oder aktualisieren.',
+        'Extrahieren Sie automatisch N Schlüsselwörter für jeden Abschnitt, um deren Ranking in Abfragen mit diesen Schlüsselwörtern zu verbessern. Beachten Sie, dass zusätzliche Tokens vom in den "Systemmodelleinstellungen" angegebenen Chat-Modell verbraucht werden. Sie können die hinzugefügten Schlüsselwörter eines Abschnitts in der Abschnittsliste überprüfen oder aktualisieren. Für weitere Informationen siehe https://ragflow.io/docs/dev/autokeyword_autoquestion.',
       autoQuestions: 'Auto-Frage',
       autoQuestionsTip:
-        'Um die Ranking-Ergebnisse zu verbessern, extrahieren Sie N Fragen für jeden Wissensdatenbank-Chunk mithilfe des im "Systemmodell-Setup" definierten Chatmodells. Beachten Sie, dass dies zusätzliche Token verbraucht. Die Ergebnisse können in der Chunk-Liste eingesehen und bearbeitet werden. Fehler bei der Fragenextraktion blockieren den Chunking-Prozess nicht; leere Ergebnisse werden dem ursprünglichen Chunk hinzugefügt.',
+        'Um die Ranking-Ergebnisse zu verbessern, extrahieren Sie N Fragen für jeden Wissensdatenbank-Chunk mithilfe des im "Systemmodell-Setup" definierten Chatmodells. Beachten Sie, dass dies zusätzliche Token verbraucht. Die Ergebnisse können in der Chunk-Liste eingesehen und bearbeitet werden. Fehler bei der Fragenextraktion blockieren den Chunking-Prozess nicht; leere Ergebnisse werden dem ursprünglichen Chunk hinzugefügt. Für weitere Informationen siehe https://ragflow.io/docs/dev/autokeyword_autoquestion.',
       redo: 'Möchten Sie die vorhandenen {{chunkNum}} Chunks löschen?',
       setMetaData: 'Metadaten festlegen',
       pleaseInputJson: 'Bitte JSON eingeben',
@@ -240,7 +241,7 @@ export default {
       methodTitle: 'Beschreibung der Chunk-Methode',
       methodExamples: 'Beispiele',
       methodExamplesDescription:
-        'Die folgenden Screenshots dienen zur Verdeutlichung.',
+        'Um Ihnen das Verständnis zu erleichtern, haben wir relevante Screenshots als Referenz bereitgestellt.',
       dialogueExamplesTitle: 'Dialogbeispiele',
       methodEmpty:
         'Hier wird eine visuelle Erklärung der Wissensdatenbank-Kategorien angezeigt',
@@ -254,7 +255,7 @@ export default {
       manual: `<p>Nur <b>PDF</b> wird unterstützt.</p><p>
         Wir gehen davon aus, dass das Handbuch eine hierarchische Abschnittsstruktur aufweist und verwenden die Titel der untersten Abschnitte als Grundeinheit für die Aufteilung der Dokumente. Daher werden Abbildungen und Tabellen im selben Abschnitt nicht getrennt, was zu größeren Chunk-Größen führen kann.
         </p>`,
-      naive: `<p>Unterstützte Dateiformate sind <b>DOCX, XLSX, XLS (Excel97~2003), PPT, PDF, TXT, JPEG, JPG, PNG, TIF, GIF, CSV, JSON, EML, HTML</b>.</p>
+      naive: `<p>Unterstützte Dateiformate sind <b>MD, MDX, DOCX, XLSX, XLS (Excel 97-2003), PPT, PDF, TXT, JPEG, JPG, PNG, TIF, GIF, CSV, JSON, EML, HTML</b>.</p>
         <p>Diese Methode teilt Dateien mit einer 'naiven' Methode auf: </p>
         <p>
         <li>Verwenden eines Erkennungsmodells, um die Texte in kleinere Segmente aufzuteilen.</li>
@@ -324,7 +325,7 @@ export default {
   <p>Die Chunks werden dann dem LLM zugeführt, um Entitäten und Beziehungen für einen Wissensgraphen und eine Mind Map zu extrahieren.</p>
   <p>Stellen Sie sicher, dass Sie die <b>Entitätstypen</b> festlegen.</p>`,
       tag: `<p>Eine Wissensdatenbank, die die 'Tag'-Chunk-Methode verwendet, fungiert als Tag-Set. Andere Wissensdatenbanken können es verwenden, um ihre eigenen Chunks zu taggen, und Abfragen an diese Wissensdatenbanken werden ebenfalls mit diesem Tag-Set getaggt.</p>
-      <p>Die Wissensdatenbank, die 'Tag' als Chunk-Methode verwendet, ist <b>NICHT</b> an einem Retrieval-Augmented Generation (RAG)-Prozess beteiligt.</p>
+      <p>Ein Tag-Set wird <b>NICHT</b> direkt in einen Retrieval-Augmented Generation (RAG)-Prozess einbezogen.</p>
       <p>Jeder Chunk in dieser Wissensdatenbank ist ein unabhängiges Beschreibungs-Tag-Paar.</p>
       <p>Zu den unterstützten Dateiformaten gehören <b>XLSX</b> und <b>CSV/TXT</b>:</p>
       <p>Wenn eine Datei im <b>XLSX</b>-Format vorliegt, sollte sie zwei Spalten ohne Überschriften enthalten: eine für Tag-Beschreibungen und die andere für Tag-Namen, wobei die Spalte "Beschreibung" vor der Spalte "Tag" steht. Mehrere Blätter sind zulässig, sofern die Spalten ordnungsgemäß strukturiert sind.</p>
@@ -343,7 +344,8 @@ export default {
         {cluster_content}
   Das oben Genannte ist der Inhalt, den Sie zusammenfassen müssen.`,
       maxToken: 'Maximale Token',
-      maxTokenTip: 'Die maximale Anzahl an Token pro generiertem Zusammenfassungs-Chunk.',
+      maxTokenTip:
+        'Die maximale Anzahl an Token pro generiertem Zusammenfassungs-Chunk.',
       maxTokenMessage: 'Maximale Token sind erforderlich',
       threshold: 'Schwellenwert',
       thresholdTip:
@@ -450,7 +452,7 @@ export default {
         'Sie sind ein intelligenter Assistent. Bitte fassen Sie den Inhalt der Wissensdatenbank zusammen, um die Frage zu beantworten. Bitte listen Sie die Daten in der Wissensdatenbank auf und antworten Sie detailliert. Wenn alle Inhalte der Wissensdatenbank für die Frage irrelevant sind, muss Ihre Antwort den Satz "Die gesuchte Antwort wurde in der Wissensdatenbank nicht gefunden!" enthalten. Antworten müssen den Chat-Verlauf berücksichtigen.\nHier ist die Wissensdatenbank:\n{knowledge}\nDas oben Genannte ist die Wissensdatenbank.',
       systemMessage: 'Bitte eingeben!',
       systemTip:
-        'Ihre Prompts oder Anweisungen für das LLM, einschließlich, aber nicht beschränkt auf seine Rolle, die gewünschte Länge, den Ton und die Sprache seiner Antworten.',
+        'Ihre Prompts oder Anweisungen für das LLM, einschließlich, aber nicht beschränkt auf seine Rolle, die gewünschte Länge, den Ton und die Sprache seiner Antworten. Wenn Ihr Modell native Unterstützung für das Schlussfolgern hat, können Sie //no_thinking zum Prompt hinzufügen, um das Schlussfolgern zu stoppen.',
       topN: 'Top N',
       topNTip:
         'Nicht alle Chunks mit einem Ähnlichkeitswert über dem "Ähnlichkeitsschwellenwert" werden an das LLM gesendet. Dies wählt die "Top N" Chunks aus den abgerufenen aus.',
@@ -547,7 +549,7 @@ export default {
         'Ob ein Wissensgraph im angegebenen Wissensspeicher während der Wiederherstellung für die Beantwortung von Fragen mit mehreren Schritten verwendet werden soll. Wenn aktiviert, beinhaltet dies iterative Suchen über Entitäten-, Beziehungs- und Gemeinschaftsberichtssegmente, was die Wiederherstellungszeit erheblich verlängert.',
       keyword: 'Schlüsselwortanalyse',
       keywordTip:
-        'LLM anwenden, um die Fragen des Benutzers zu analysieren und Schlüsselwörter zu extrahieren, die während der Relevanzberechnung hervorgehoben werden.',
+        'LLM anwenden, um die Fragen des Benutzers zu analysieren und Schlüsselwörter zu extrahieren, die während der Relevanzberechnung hervorgehoben werden. Funktioniert gut bei langen Anfragen, erhöht jedoch die Antwortzeit.',
       languageTip:
         'Ermöglicht die Umformulierung von Sätzen in der angegebenen Sprache oder verwendet standardmäßig die letzte Frage, wenn keine ausgewählt ist.',
       avatarHidden: 'Avatar ausblenden',
@@ -563,6 +565,7 @@ export default {
     },
     setting: {
       profile: 'Profil',
+      avatar: 'Avatar',
       profileDescription:
         'Aktualisieren Sie hier Ihr Foto und Ihre persönlichen Daten.',
       maxTokens: 'Maximale Tokens',
@@ -617,6 +620,7 @@ export default {
       apiKeyTip:
         'Der API-Schlüssel kann durch Registrierung beim entsprechenden LLM-Anbieter erhalten werden.',
       showMoreModels: 'Mehr Modelle anzeigen',
+      hideModels: 'Modelle ausblenden',
       baseUrl: 'Basis-URL',
       baseUrlTip:
         'Wenn Ihr API-Schlüssel von OpenAI stammt, ignorieren Sie dies. Andere Zwischenanbieter geben diese Basis-URL mit dem API-Schlüssel an.',
@@ -713,7 +717,7 @@ export default {
       addGoogleRegion: 'Google Cloud Region',
       GoogleRegionMessage: 'Bitte geben Sie die Google Cloud Region ein',
       modelProvidersWarn:
-        'Bitte fügen Sie zuerst sowohl das Embedding-Modell als auch das LLM in <b>Einstellungen > Modellanbieter</b> hinzu. Legen Sie sie dann in "Systemmodelleinstellungen" fest.',
+        'Bitte fügen Sie zuerst sowohl das Embedding-Modell als auch das LLM in <b>Einstellungen > Modellanbieter</b> hinzu. Legen Sie sie dann in "Standardmodelle festlegen" fest.',
       apiVersion: 'API-Version',
       apiVersionMessage: 'Bitte geben Sie die API-Version ein',
       add: 'Hinzufügen',
@@ -1227,6 +1231,7 @@ export default {
       promptTip:
         'Verwenden Sie den Systemprompt, um die Aufgabe für das LLM zu beschreiben, festzulegen, wie es antworten soll, und andere verschiedene Anforderungen zu skizzieren. Der Systemprompt wird oft in Verbindung mit Schlüsseln (Variablen) verwendet, die als verschiedene Dateninputs für das LLM dienen. Verwenden Sie einen Schrägstrich `/` oder die (x)-Schaltfläche, um die zu verwendenden Schlüssel anzuzeigen.',
       promptMessage: 'Prompt ist erforderlich',
+      runningHintText: 'läuft...🕞',
     },
     footer: {
       profile: 'Alle Rechte vorbehalten @ React',

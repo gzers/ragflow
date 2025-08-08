@@ -1,22 +1,25 @@
 import { useHandleFilterSubmit } from '@/components/list-filter-bar/use-handle-filter-submit';
 import {
   IKnowledge,
+  IKnowledgeGraph,
   IKnowledgeResult,
   INextTestingResult,
 } from '@/interfaces/database/knowledge';
 import { ITestRetrievalRequestBody } from '@/interfaces/request/knowledge';
 import i18n from '@/locales/config';
-import kbService, { listDataset } from '@/services/knowledge-service';
+import kbService, {
+  getKnowledgeGraph,
+  listDataset,
+} from '@/services/knowledge-service';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useDebounce } from 'ahooks';
 import { message } from 'antd';
-import { useCallback, useMemo, useState } from 'react';
-import { useParams } from 'umi';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useParams, useSearchParams } from 'umi';
 import {
   useGetPaginationWithRouter,
   useHandleSearchChange,
 } from './logic-hooks';
-import { useSetPaginationParams } from './route-hook';
 
 export const enum KnowledgeApiAction {
   TestRetrieval = 'testRetrieval',
@@ -27,16 +30,25 @@ export const enum KnowledgeApiAction {
   FetchKnowledgeDetail = 'fetchKnowledgeDetail',
 }
 
-export const useKnowledgeBaseId = () => {
+export const useKnowledgeBaseId = (): string => {
   const { id } = useParams();
 
-  return id;
+  return (id as string) || '';
 };
 
 export const useTestRetrieval = () => {
   const knowledgeBaseId = useKnowledgeBaseId();
-  const { page, size: pageSize } = useSetPaginationParams();
   const [values, setValues] = useState<ITestRetrievalRequestBody>();
+  const mountedRef = useRef(false);
+  const { filterValue, handleFilterSubmit } = useHandleFilterSubmit();
+
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
+
+  const onPaginationChange = useCallback((page: number, pageSize: number) => {
+    setPage(page);
+    setPageSize(pageSize);
+  }, []);
 
   const queryParams = useMemo(() => {
     return {
@@ -44,15 +56,16 @@ export const useTestRetrieval = () => {
       kb_id: values?.kb_id || knowledgeBaseId,
       page,
       size: pageSize,
+      doc_ids: filterValue.doc_ids,
     };
-  }, [knowledgeBaseId, page, pageSize, values]);
+  }, [filterValue, knowledgeBaseId, page, pageSize, values]);
 
   const {
     data,
     isFetching: loading,
     refetch,
   } = useQuery<INextTestingResult>({
-    queryKey: [KnowledgeApiAction.TestRetrieval, queryParams],
+    queryKey: [KnowledgeApiAction.TestRetrieval, queryParams, page, pageSize],
     initialData: {
       chunks: [],
       doc_aggs: [],
@@ -62,12 +75,28 @@ export const useTestRetrieval = () => {
     gcTime: 0,
     queryFn: async () => {
       const { data } = await kbService.retrieval_test(queryParams);
-      console.log('🚀 ~ queryFn: ~ data:', data);
       return data?.data ?? {};
     },
   });
 
-  return { data, loading, setValues, refetch };
+  useEffect(() => {
+    if (mountedRef.current) {
+      refetch();
+    }
+    mountedRef.current = true;
+  }, [page, pageSize, refetch, filterValue]);
+
+  return {
+    data,
+    loading,
+    setValues,
+    refetch,
+    onPaginationChange,
+    page,
+    pageSize,
+    handleFilterSubmit,
+    filterValue,
+  };
 };
 
 export const useFetchNextKnowledgeListByPage = () => {
@@ -203,16 +232,25 @@ export const useUpdateKnowledge = (shouldFetchList = false) => {
   return { data, loading, saveKnowledgeConfiguration: mutateAsync };
 };
 
-export const useFetchKnowledgeBaseConfiguration = () => {
+export const useFetchKnowledgeBaseConfiguration = (refreshCount?: number) => {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const knowledgeBaseId = searchParams.get('id') || id;
+
+  let queryKey: (KnowledgeApiAction | number)[] = [
+    KnowledgeApiAction.FetchKnowledgeDetail,
+  ];
+  if (typeof refreshCount === 'number') {
+    queryKey = [KnowledgeApiAction.FetchKnowledgeDetail, refreshCount];
+  }
 
   const { data, isFetching: loading } = useQuery<IKnowledge>({
-    queryKey: [KnowledgeApiAction.FetchKnowledgeDetail],
+    queryKey,
     initialData: {} as IKnowledge,
     gcTime: 0,
     queryFn: async () => {
       const { data } = await kbService.get_kb_detail({
-        kb_id: id,
+        kb_id: knowledgeBaseId,
       });
       return data?.data ?? {};
     },
@@ -220,3 +258,20 @@ export const useFetchKnowledgeBaseConfiguration = () => {
 
   return { data, loading };
 };
+
+export function useFetchKnowledgeGraph() {
+  const knowledgeBaseId = useKnowledgeBaseId();
+
+  const { data, isFetching: loading } = useQuery<IKnowledgeGraph>({
+    queryKey: ['fetchKnowledgeGraph', knowledgeBaseId],
+    initialData: { graph: {}, mind_map: {} } as IKnowledgeGraph,
+    enabled: !!knowledgeBaseId,
+    gcTime: 0,
+    queryFn: async () => {
+      const { data } = await getKnowledgeGraph(knowledgeBaseId);
+      return data?.data;
+    },
+  });
+
+  return { data, loading };
+}
